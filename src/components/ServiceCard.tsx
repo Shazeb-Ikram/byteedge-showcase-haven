@@ -11,11 +11,13 @@ interface ServiceCardProps {
 
 const ServiceCard = ({ id, icon, title, description }: ServiceCardProps) => {
   return (
-    <Link to={`/services/${id}`} className="service-card group">
-      <div className="service-card-icon">{icon}</div>
-      <h3 className="text-xl font-semibold mb-3 group-hover:text-byteblue transition-colors duration-300">{title}</h3>
-      <p className="text-muted-foreground text-sm">{description}</p>
-    </Link>
+    <div className="service-card group">
+      <Link to={`/services/${id}`} className="flex flex-col items-center">
+        <div className="service-card-icon">{icon}</div>
+        <h3 className="text-xl font-semibold mb-3 group-hover:text-byteblue transition-colors duration-300">{title}</h3>
+        <p className="text-muted-foreground text-sm">{description}</p>
+      </Link>
+    </div>
   );
 };
 
