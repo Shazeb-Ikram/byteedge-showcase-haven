@@ -10,6 +10,7 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ id, icon, title, description }: ServiceCardProps) => {
+  console.log(`Rendering ServiceCard: ${id}`);
   return (
     <div className="service-card group">
       <Link to={`/services/${id}`} className="flex flex-col items-center">
