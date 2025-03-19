@@ -22,76 +22,103 @@ const AnimatedBackground: React.FC = () => {
     window.addEventListener('resize', handleResize);
     handleResize();
     
-    // Create particles
-    const particleCount = 50;
-    const particles: {
-      x: number;
-      y: number;
-      radius: number;
-      dx: number;
-      dy: number;
+    // Create flowing wave patterns
+    const waveCount = 3;
+    const waves: {
+      amplitude: number;
+      frequency: number;
+      speed: number;
+      phase: number;
+      color: string;
       opacity: number;
     }[] = [];
     
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 3 + 1,
-        dx: (Math.random() - 0.5) * 0.5,
-        dy: (Math.random() - 0.5) * 0.5,
-        opacity: Math.random() * 0.5 + 0.1
+    // Setup waves with different properties
+    for (let i = 0; i < waveCount; i++) {
+      waves.push({
+        amplitude: 10 + Math.random() * 20,
+        frequency: 0.005 + Math.random() * 0.005,
+        speed: 0.05 + Math.random() * 0.05,
+        phase: Math.random() * Math.PI * 2,
+        color: theme === 'dark' ? '#2563eb' : '#60a5fa',
+        opacity: 0.03 + Math.random() * 0.03
       });
     }
     
     // Animation loop
     let animationFrameId: number;
+    let time = 0;
     
     const animate = () => {
+      time += 0.01;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw and update particles
-      particles.forEach(particle => {
-        // Set particle color based on theme
-        const baseColor = theme === 'dark' ? '255, 255, 255' : '14, 134, 240';
-        ctx.fillStyle = `rgba(${baseColor}, ${particle.opacity})`;
-        
+      // Draw gradient background (just for a subtle touch)
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      if (theme === 'dark') {
+        gradient.addColorStop(0, 'rgba(15, 23, 42, 0)');
+        gradient.addColorStop(1, 'rgba(30, 41, 59, 0)');
+      } else {
+        gradient.addColorStop(0, 'rgba(240, 249, 255, 0)');
+        gradient.addColorStop(1, 'rgba(224, 242, 254, 0)');
+      }
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw flowing waves
+      waves.forEach((wave, index) => {
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        
+        const baseY = canvas.height / 2;
+        
+        for (let x = 0; x < canvas.width; x += 5) {
+          const y = baseY + 
+            Math.sin(x * wave.frequency + wave.phase + time * wave.speed) * wave.amplitude + 
+            Math.sin(x * wave.frequency * 2 + wave.phase + time * wave.speed * 1.5) * wave.amplitude * 0.5;
+          
+          if (x === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        
+        // Complete the wave path
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.lineTo(0, canvas.height);
+        ctx.closePath();
+        
+        // Different colors for different waves
+        const waveGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        if (theme === 'dark') {
+          waveGradient.addColorStop(0, `rgba(30, 64, 175, ${wave.opacity})`);
+          waveGradient.addColorStop(0.5, `rgba(37, 99, 235, ${wave.opacity})`);
+          waveGradient.addColorStop(1, `rgba(59, 130, 246, ${wave.opacity})`);
+        } else {
+          waveGradient.addColorStop(0, `rgba(14, 134, 240, ${wave.opacity})`);
+          waveGradient.addColorStop(0.5, `rgba(59, 130, 246, ${wave.opacity})`);
+          waveGradient.addColorStop(1, `rgba(96, 165, 250, ${wave.opacity})`);
+        }
+        
+        ctx.fillStyle = waveGradient;
         ctx.fill();
-        
-        // Update position
-        particle.x += particle.dx;
-        particle.y += particle.dy;
-        
-        // Bounce off edges
-        if (particle.x + particle.radius > canvas.width || particle.x - particle.radius < 0) {
-          particle.dx = -particle.dx;
-        }
-        
-        if (particle.y + particle.radius > canvas.height || particle.y - particle.radius < 0) {
-          particle.dy = -particle.dy;
-        }
       });
       
-      // Draw connecting lines between nearby particles
-      particles.forEach((p1, i) => {
-        particles.slice(i + 1).forEach(p2 => {
-          const distance = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-          const maxDistance = 150;
-          
-          if (distance < maxDistance) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            
-            const opacity = (1 - distance / maxDistance) * 0.2;
-            const baseColor = theme === 'dark' ? '255, 255, 255' : '14, 134, 240';
-            ctx.strokeStyle = `rgba(${baseColor}, ${opacity})`;
-            ctx.stroke();
-          }
-        });
-      });
+      // Add subtle floating particles
+      const particleCount = 30;
+      const baseColor = theme === 'dark' ? '59, 130, 246' : '14, 134, 240';
+      
+      for (let i = 0; i < particleCount; i++) {
+        const x = (Math.sin(time * 0.2 + i * 0.4) * 0.5 + 0.5) * canvas.width;
+        const y = (Math.cos(time * 0.3 + i * 0.5) * 0.5 + 0.5) * canvas.height;
+        const size = 1 + Math.sin(time * 0.1 + i) * 1;
+        const opacity = 0.1 + Math.sin(time * 0.2 + i * 0.3) * 0.05;
+        
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${baseColor}, ${opacity})`;
+        ctx.fill();
+      }
       
       animationFrameId = requestAnimationFrame(animate);
     };
