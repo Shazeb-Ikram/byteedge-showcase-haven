@@ -21,240 +21,130 @@ const AnimatedBackground: React.FC = () => {
     
     window.addEventListener('resize', handleResize);
     handleResize();
-    
-    // Line configuration
-    const linesCount = 12; // Fewer lines for less distraction
-    const lines: {
-      startX: number;
-      startY: number;
-      controlPoint1X: number;
-      controlPoint1Y: number;
-      controlPoint2X: number;
-      controlPoint2Y: number;
-      endX: number;
-      endY: number;
-      width: number;
-      progress: number;
-      speed: number;
-      color: string;
-      maxProgress: number;
-      delay: number;
+
+    // Particle system configuration
+    const particleCount = 50; // Number of particles
+    const connectionDistance = 200; // Maximum distance to draw connections
+    const particles: {
+      x: number;
+      y: number;
+      radius: number;
+      speedX: number;
+      speedY: number;
+      hue: number;
+      hueSpeed: number;
+      opacity: number;
     }[] = [];
     
-    // Create the curved lines
-    for (let i = 0; i < linesCount; i++) {
-      // Random start position on the edges of the screen
-      const edge = Math.floor(Math.random() * 4); // 0: top, 1: right, 2: bottom, 3: left
-      let startX, startY;
-      
-      switch (edge) {
-        case 0: // top
-          startX = Math.random() * canvas.width;
-          startY = 0;
-          break;
-        case 1: // right
-          startX = canvas.width;
-          startY = Math.random() * canvas.height;
-          break;
-        case 2: // bottom
-          startX = Math.random() * canvas.width;
-          startY = canvas.height;
-          break;
-        default: // left
-          startX = 0;
-          startY = Math.random() * canvas.height;
-          break;
-      }
-      
-      // Generate random end point (opposite edge preferred)
-      let endX, endY;
-      const oppositeEdge = (edge + 2) % 4;
-      
-      switch (oppositeEdge) {
-        case 0: // top
-          endX = Math.random() * canvas.width;
-          endY = 0;
-          break;
-        case 1: // right
-          endX = canvas.width;
-          endY = Math.random() * canvas.height;
-          break;
-        case 2: // bottom
-          endX = Math.random() * canvas.width;
-          endY = canvas.height;
-          break;
-        default: // left
-          endX = 0;
-          endY = Math.random() * canvas.height;
-          break;
-      }
-      
-      // Generate control points for the bezier curve
-      // These determine the curvature of the lines
-      const controlPoint1X = startX + (Math.random() - 0.5) * canvas.width * 0.8;
-      const controlPoint1Y = startY + (Math.random() - 0.5) * canvas.height * 0.8;
-      const controlPoint2X = endX + (Math.random() - 0.5) * canvas.width * 0.8;
-      const controlPoint2Y = endY + (Math.random() - 0.5) * canvas.height * 0.8;
-      
-      // Set line properties
-      const lineColor = theme === 'dark' 
-        ? `rgba(200, 200, 220, ${0.05 + Math.random() * 0.1})` // Light gray for dark mode
-        : `rgba(70, 70, 90, ${0.05 + Math.random() * 0.1})`; // Dark gray for light mode
-      
-      lines.push({
-        startX,
-        startY,
-        controlPoint1X,
-        controlPoint1Y,
-        controlPoint2X,
-        controlPoint2Y,
-        endX,
-        endY,
-        width: 10 + Math.random() * 20, // Super thick lines (10-30px)
-        progress: 0,
-        speed: 0.0015 + Math.random() * 0.0015, // Slower for more subtle movement
-        color: lineColor,
-        maxProgress: 0.8 + Math.random() * 0.2, // Max progress for line drawing
-        delay: Math.random() * 5000, // Random delay for staggered animation
+    // Create particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        hue: Math.random() * 60 - 30, // Slight color variation
+        hueSpeed: (Math.random() - 0.5) * 0.1, // Color changing speed
+        opacity: 0.1 + Math.random() * 0.3
       });
     }
     
-    let animationStartTime = Date.now();
-    let animationFrameId: number;
-    
     const animate = () => {
-      const currentTime = Date.now();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Clear canvas with slight persistence for trailing effect
+      ctx.fillStyle = theme === 'dark' 
+        ? 'rgba(10, 10, 20, 0.05)' 
+        : 'rgba(255, 255, 255, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Draw curved lines
-      lines.forEach(line => {
-        // Apply delay to each line
-        if (currentTime - animationStartTime < line.delay) {
-          return;
-        }
+      // Draw and update particles
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
         
-        // Update line drawing progress
-        line.progress += line.speed;
+        // Update position
+        p.x += p.speedX;
+        p.y += p.speedY;
         
-        // Reset line when it reaches maximum progress
-        if (line.progress >= line.maxProgress) {
-          line.progress = 0;
-          
-          // Generate new line
-          const edge = Math.floor(Math.random() * 4);
-          switch (edge) {
-            case 0: // top
-              line.startX = Math.random() * canvas.width;
-              line.startY = 0;
-              break;
-            case 1: // right
-              line.startX = canvas.width;
-              line.startY = Math.random() * canvas.height;
-              break;
-            case 2: // bottom
-              line.startX = Math.random() * canvas.width;
-              line.startY = canvas.height;
-              break;
-            default: // left
-              line.startX = 0;
-              line.startY = Math.random() * canvas.height;
-              break;
-          }
-          
-          // Generate new end point
-          const oppositeEdge = (edge + 2) % 4;
-          switch (oppositeEdge) {
-            case 0: // top
-              line.endX = Math.random() * canvas.width;
-              line.endY = 0;
-              break;
-            case 1: // right
-              line.endX = canvas.width;
-              line.endY = Math.random() * canvas.height;
-              break;
-            case 2: // bottom
-              line.endX = Math.random() * canvas.width;
-              line.endY = canvas.height;
-              break;
-            default: // left
-              line.endX = 0;
-              line.endY = Math.random() * canvas.height;
-              break;
-          }
-          
-          // New control points
-          line.controlPoint1X = line.startX + (Math.random() - 0.5) * canvas.width * 0.8;
-          line.controlPoint1Y = line.startY + (Math.random() - 0.5) * canvas.height * 0.8;
-          line.controlPoint2X = line.endX + (Math.random() - 0.5) * canvas.width * 0.8;
-          line.controlPoint2Y = line.endY + (Math.random() - 0.5) * canvas.height * 0.8;
-          
-          // New thickness and speed
-          line.width = 10 + Math.random() * 20;
-          line.speed = 0.0015 + Math.random() * 0.0015;
-          line.delay = currentTime - animationStartTime + Math.random() * 3000;
-          
-          // New color
-          line.color = theme === 'dark' 
-            ? `rgba(200, 200, 220, ${0.05 + Math.random() * 0.1})` 
-            : `rgba(70, 70, 90, ${0.05 + Math.random() * 0.1})`;
-        }
+        // Update hue
+        p.hue += p.hueSpeed;
         
-        // Draw curve with current progress
+        // Boundary checks with wrapping
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        
+        // Draw particle
         ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         
-        // Calculate points along the bezier curve for the current progress
-        const t = line.progress;
-        let currentX, currentY;
+        // Set particle color based on theme
+        const baseColor = theme === 'dark' ? '200, 220, 255' : '30, 60, 110';
+        ctx.fillStyle = `rgba(${baseColor}, ${p.opacity})`;
+        ctx.fill();
         
-        // Get coordinates of the point at the current progress along the bezier curve
-        const bezierPoint = (t: number, p0: number, p1: number, p2: number, p3: number) => {
-          const cX = 3 * (p1 - p0);
-          const bX = 3 * (p2 - p1) - cX;
-          const aX = p3 - p0 - cX - bX;
-          return aX * Math.pow(t, 3) + bX * Math.pow(t, 2) + cX * t + p0;
+        // Create connections between nearby particles
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < connectionDistance) {
+            // Calculate opacity based on distance (closer = more opaque)
+            const opacity = (1 - distance / connectionDistance) * 0.4 * (p.opacity + p2.opacity) / 2;
+            
+            // Draw line connecting particles
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            
+            // Set line color based on theme
+            ctx.strokeStyle = theme === 'dark' 
+              ? `rgba(180, 210, 255, ${opacity})` 
+              : `rgba(50, 90, 160, ${opacity})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      
+      // Create occasional radial pulses for visual interest (constellation "activations")
+      if (Math.random() < 0.01) { // 1% chance per frame
+        const pulse = {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: 0,
+          maxRadius: 100 + Math.random() * 150,
+          growth: 3 + Math.random() * 2
         };
         
-        currentX = bezierPoint(t, line.startX, line.controlPoint1X, line.controlPoint2X, line.endX);
-        currentY = bezierPoint(t, line.startY, line.controlPoint1Y, line.controlPoint2Y, line.endY);
+        const expandPulse = () => {
+          ctx.beginPath();
+          ctx.arc(pulse.x, pulse.y, pulse.radius, 0, Math.PI * 2);
+          ctx.strokeStyle = theme === 'dark' 
+            ? `rgba(180, 210, 255, ${0.4 - pulse.radius / pulse.maxRadius * 0.4})` 
+            : `rgba(50, 90, 160, ${0.3 - pulse.radius / pulse.maxRadius * 0.3})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+          
+          pulse.radius += pulse.growth;
+          
+          if (pulse.radius < pulse.maxRadius) {
+            requestAnimationFrame(expandPulse);
+          }
+        };
         
-        // Draw the line segment
-        ctx.moveTo(line.startX, line.startY);
-        ctx.bezierCurveTo(
-          line.controlPoint1X, 
-          line.controlPoint1Y, 
-          line.controlPoint2X, 
-          line.controlPoint2Y, 
-          currentX, 
-          currentY
-        );
-        
-        // Apply line styles
-        ctx.lineWidth = line.width;
-        ctx.strokeStyle = line.color;
-        ctx.lineCap = 'round';
-        
-        // Adjust global opacity for a fade-in and fade-out effect
-        let opacity = 1;
-        if (t < 0.2) { // Fade in
-          opacity = t / 0.2;
-        } else if (t > 0.6) { // Fade out
-          opacity = 1 - ((t - 0.6) / 0.4);
-        }
-        ctx.globalAlpha = opacity;
-        
-        ctx.stroke();
-        ctx.globalAlpha = 1; // Reset global alpha
-      });
+        expandPulse();
+      }
       
-      animationFrameId = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     };
     
     animate();
     
-    // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animationFrameId);
     };
   }, [theme]);
   
