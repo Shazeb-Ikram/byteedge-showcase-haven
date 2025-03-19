@@ -1,7 +1,7 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Monitor, Smartphone, Server, Palette, Cloud, Cog } from 'lucide-react';
+import Logo from './Logo';
 
 const Navbar = () => {
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -48,7 +48,6 @@ const Navbar = () => {
     }
   ];
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (servicesRef.current && !servicesRef.current.contains(event.target as Node)) {
@@ -62,12 +61,10 @@ const Navbar = () => {
     };
   }, []);
 
-  // Close dropdown when navigating
   useEffect(() => {
     setServicesOpen(false);
   }, [location]);
 
-  // Add scroll effect
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -87,12 +84,7 @@ const Navbar = () => {
     <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'bg-background/80 backdrop-blur-md shadow-sm' : 'bg-background'}`}>
       <div className="container-custom mx-auto">
         <div className="flex justify-between items-center py-4">
-          <Link to="/" className="flex items-center space-x-2 transition-transform duration-300 hover:scale-105">
-            <h1 className="font-bold text-2xl">
-              <span className="text-foreground">Byte</span>
-              <span className="text-byteblue">Edge</span>
-            </h1>
-          </Link>
+          <Logo />
           
           <nav>
             <ul className="flex space-x-10 items-center">

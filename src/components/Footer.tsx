@@ -1,6 +1,6 @@
-
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook } from 'lucide-react';
+import Logo from './Logo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -11,12 +11,7 @@ const Footer = () => {
         {/* Main footer content */}
         <div className="flex flex-col md:flex-row justify-between mb-10 gap-10">
           <div className="mb-6 md:mb-0">
-            <Link to="/" className="inline-block">
-              <h2 className="font-bold text-2xl mb-4">
-                <span className="text-foreground">Byte</span>
-                <span className="text-byteblue">Edge</span>
-              </h2>
-            </Link>
+            <Logo className="mb-4 inline-block" />
             <p className="text-muted-foreground max-w-xs text-left">
               Connecting talented remote developers with businesses worldwide to deliver premium software solutions.
             </p>
@@ -57,10 +52,11 @@ const Footer = () => {
         </div>
         
         {/* Copyright */}
-        <div className="border-t border-border pt-8 text-center">
+        <div className="border-t border-border pt-8 text-center flex flex-col md:flex-row justify-center items-center gap-2">
           <p className="text-muted-foreground text-sm">
             © {currentYear} ByteEdge. All rights reserved.
           </p>
+          <span className="romantic-text text-byteblue text-xl">Munchkin</span>
         </div>
       </div>
     </footer>

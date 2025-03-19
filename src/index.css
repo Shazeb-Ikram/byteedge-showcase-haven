@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -118,5 +119,9 @@
   .dropdown-content {
     @apply absolute mt-2 z-50 bg-card border border-border rounded-md shadow-lg overflow-hidden transition-all duration-300 animate-slide-down;
     min-width: 16rem;
+  }
+  
+  .romantic-text {
+    font-family: 'Dancing Script', cursive;
   }
 }

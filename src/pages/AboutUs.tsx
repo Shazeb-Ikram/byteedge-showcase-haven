@@ -21,7 +21,7 @@ const AboutUs = () => {
             <h2 className="text-2xl md:text-3xl font-semibold mb-8">Our Story</h2>
             <div className="prose prose-lg max-w-4xl mx-auto">
               <p className="text-muted-foreground mb-4">
-                Founded in 2020, ByteEdge began with a simple mission: to connect talented remote developers with businesses
+                Founded in 2025, ByteEdge began with a simple mission: to connect talented remote developers with businesses
                 seeking high-quality software development services. What started as a small team of passionate technologists
                 has grown into a global network of skilled professionals delivering exceptional digital solutions.
               </p>
