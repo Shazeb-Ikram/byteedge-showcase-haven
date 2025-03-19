@@ -12,36 +12,52 @@ const Logo: React.FC<LogoProps> = ({ className }) => {
   
   return (
     <Link to="/" className={`flex items-center space-x-2 transition-all duration-500 hover:scale-105 ${className}`}>
-      <div className="relative h-11 w-11 overflow-hidden">
-        {/* Animated logo shape with glow effect */}
-        <div className="absolute inset-0 rounded-lg shadow-lg bg-gradient-to-br from-byteblue to-blue-700 animate-pulse" style={{ animationDuration: '3s' }}></div>
+      <div className="relative h-11 w-11 overflow-hidden rounded-lg border border-byteblue/20 group">
+        {/* Dynamic background with animated gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-byteblue to-blue-600 opacity-80 animate-pulse" 
+             style={{ animationDuration: '3s' }}></div>
         
-        {/* Inner shape with hover animation */}
-        <div className="absolute inset-[2px] rounded-[6px] backdrop-blur-sm flex items-center justify-center overflow-hidden
-                       bg-gradient-to-tr from-background via-background to-background/90 group-hover:from-background/90">
+        {/* Inner shape with interactive effects */}
+        <div className="absolute inset-[2px] rounded-md backdrop-blur-sm flex items-center justify-center overflow-hidden
+                       bg-gradient-to-tr from-background/90 via-background/80 to-background/70">
           
-          {/* Animated accent lines */}
-          <div className="absolute top-0 left-[5px] h-[2px] w-[15px] bg-byteblue opacity-70"></div>
-          <div className="absolute bottom-0 right-[5px] h-[2px] w-[15px] bg-byteblue opacity-70"></div>
+          {/* Animated geometric elements */}
+          <div className="absolute top-[3px] left-[3px] h-[2px] w-[10px] bg-byteblue opacity-70"></div>
+          <div className="absolute bottom-[3px] right-[3px] h-[2px] w-[10px] bg-byteblue opacity-70"></div>
+          <div className="absolute top-[3px] right-[3px] h-[10px] w-[2px] bg-byteblue opacity-70"></div>
+          <div className="absolute bottom-[3px] left-[3px] h-[10px] w-[2px] bg-byteblue opacity-70"></div>
           
-          {/* Logo letter with glow */}
-          <div className="relative z-10 font-extrabold text-xl transform rotate-0 text-transparent bg-clip-text bg-gradient-to-r from-byteblue to-blue-500">
+          {/* Dynamic logo letter with glowing effect */}
+          <div className="relative z-10 font-black text-xl transform rotate-0 text-transparent bg-clip-text 
+                         bg-gradient-to-r from-blue-600 to-blue-400 animate-pulse"
+               style={{ animationDuration: '4s' }}>
             BE
           </div>
           
-          {/* Subtle animated gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-byteblue/10 to-transparent opacity-0 hover:opacity-30 transition-opacity duration-300"></div>
+          {/* Subtle animated particles */}
+          <div className="absolute h-[3px] w-[3px] rounded-full bg-byteblue/60 top-[30%] left-[20%] animate-pulse" 
+               style={{ animationDuration: '2.5s' }}></div>
+          <div className="absolute h-[2px] w-[2px] rounded-full bg-byteblue/60 bottom-[30%] right-[20%] animate-pulse" 
+               style={{ animationDuration: '1.8s' }}></div>
         </div>
         
-        {/* Subtle animated border glow */}
-        <div className="absolute -inset-[1px] rounded-lg bg-gradient-to-r from-byteblue/50 to-blue-600/50 opacity-0 group-hover:opacity-100 blur-[2px] transition-opacity duration-500"></div>
+        {/* Outer glow effect on hover */}
+        <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-byteblue/50 to-blue-600/50 opacity-0 
+                       group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
       </div>
       
-      <h1 className="font-bold text-2xl">
-        <span className="text-foreground">Byte</span>
+      <h1 className="font-bold text-2xl flex flex-col items-start">
+        <span className="text-foreground relative overflow-hidden group-hover:after:left-0">
+          Byte
+          <span className="absolute -bottom-0.5 left-0 w-full h-[1.5px] bg-gradient-to-r from-byteblue/10 
+                         via-byteblue/80 to-byteblue/10 transform scale-x-0 group-hover:scale-x-100 
+                         transition-transform duration-300 origin-left"></span>
+        </span>
         <span className="text-byteblue relative">
           Edge
-          <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-byteblue/0 via-byteblue to-byteblue/0 transform scale-x-0 hover:scale-x-100 transition-transform duration-300 origin-center"></span>
+          <span className="absolute -bottom-0.5 left-0 w-full h-[1.5px] bg-gradient-to-r from-byteblue/10 
+                         via-byteblue/80 to-byteblue/10 transform scale-x-0 group-hover:scale-x-100 
+                         transition-transform duration-300 origin-left delay-100"></span>
         </span>
       </h1>
     </Link>
