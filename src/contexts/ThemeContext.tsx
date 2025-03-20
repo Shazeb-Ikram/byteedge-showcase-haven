@@ -8,16 +8,16 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const theme = 'dark';
+  const theme = 'dark'; // Always dark theme
 
   useEffect(() => {
     const root = window.document.documentElement;
     
     // Remove existing theme classes
-    root.classList.remove('light', 'dark');
+    root.classList.remove('light');
     
     // Add dark theme class
-    root.classList.add(theme);
+    root.classList.add('dark');
     
     // Apply dark mode background
     document.body.style.backgroundColor = 'hsl(222.2 84% 4.9%)';

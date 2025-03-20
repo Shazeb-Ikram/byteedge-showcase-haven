@@ -26,6 +26,7 @@ const BiaAnimation = () => {
   useEffect(() => {
     if (!isVisible) {
       setOpacity(0);
+      setIsChanging(false);
       return;
     }
 
@@ -48,11 +49,11 @@ const BiaAnimation = () => {
 
   // Handle language changes with transitions
   useEffect(() => {
-    if (!isChanging) return;
+    if (!isChanging || !isVisible) return;
 
     // Fade out current language
     const fadeOut = () => {
-      let op = opacity;
+      let op = 1;
       const timer = setInterval(() => {
         if (op <= 0) {
           clearInterval(timer);
@@ -80,8 +81,8 @@ const BiaAnimation = () => {
       }, 50); // Slower fade-in
     };
 
-    fadeOut();
-  }, [isChanging, languages.length, opacity]);
+    setTimeout(() => fadeOut(), 3000); // Start the first fadeOut after 3 seconds
+  }, [isChanging, languages.length, isVisible]);
 
   return (
     <span 

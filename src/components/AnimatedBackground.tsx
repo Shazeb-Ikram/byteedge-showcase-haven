@@ -206,11 +206,11 @@ const AnimatedBackground: React.FC = () => {
           if (!star.displayName) {
             star.displayName = true;
           }
-          // Fade in the name
-          star.nameOpacity = Math.min(star.nameOpacity + 0.05, 1);
+          // Fade in the name more slowly
+          star.nameOpacity = Math.min(star.nameOpacity + 0.03, 1); // Slower fade in
         } else if (star.displayName) {
-          // Fade out the name
-          star.nameOpacity -= 0.03;
+          // Fade out the name more slowly
+          star.nameOpacity -= 0.02; // Slower fade out
           if (star.nameOpacity <= 0) {
             star.displayName = false;
             star.nameOpacity = 0;
@@ -272,12 +272,20 @@ const AnimatedBackground: React.FC = () => {
         ctx.fillStyle = `rgba(235, 220, 255, ${0.7 + star.pulseFactor * 0.3})`; // Bright purplish white
         ctx.fill();
         
-        // Draw star name if hovering
+        // Draw star name if hovering - improved visibility
         if (star.displayName && star.nameOpacity > 0) {
-          ctx.font = '14px Arial';
+          ctx.font = '16px Arial'; // Slightly larger font
           ctx.textAlign = 'center';
           ctx.fillStyle = `rgba(255, 255, 255, ${star.nameOpacity})`;
-          ctx.fillText(star.name, star.x, star.y + 20); // Position below the star
+          
+          // Draw a subtle background for better readability
+          const textWidth = ctx.measureText(star.name).width;
+          ctx.fillStyle = `rgba(10, 10, 30, ${star.nameOpacity * 0.6})`;
+          ctx.fillRect(star.x - textWidth/2 - 5, star.y + 10, textWidth + 10, 22);
+          
+          // Draw text
+          ctx.fillStyle = `rgba(255, 255, 255, ${star.nameOpacity})`;
+          ctx.fillText(star.name, star.x, star.y + 25); // Position below the star
         }
       });
       
