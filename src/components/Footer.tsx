@@ -8,6 +8,8 @@ const BiaAnimation = () => {
   const containerRef = useRef<HTMLSpanElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [currentLang, setCurrentLang] = useState(0);
+  const [opacity, setOpacity] = useState(0);
+  const [isChanging, setIsChanging] = useState(false);
 
   // Languages to display "Bia" in
   const languages = [
@@ -20,26 +22,83 @@ const BiaAnimation = () => {
     { text: "بیا", lang: "Persian" }
   ];
 
+  // Handle fade in/out transitions
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible) {
+      setOpacity(0);
+      return;
+    }
 
-    const interval = setInterval(() => {
-      setCurrentLang((prev) => (prev + 1) % languages.length);
-    }, 1000); // Change language every second
+    // Initial fade in
+    const fadeIn = () => {
+      let op = 0;
+      const timer = setInterval(() => {
+        if (op >= 1) {
+          clearInterval(timer);
+          setTimeout(() => setIsChanging(true), 2000); // Wait 2 seconds before changing
+          return;
+        }
+        op += 0.05;
+        setOpacity(op);
+      }, 30);
+    };
 
-    return () => clearInterval(interval);
-  }, [isVisible, languages.length]);
+    fadeIn();
+  }, [isVisible]);
+
+  // Handle language changes with transitions
+  useEffect(() => {
+    if (!isChanging) return;
+
+    // Fade out current language
+    const fadeOut = () => {
+      let op = opacity;
+      const timer = setInterval(() => {
+        if (op <= 0) {
+          clearInterval(timer);
+          // Change language after fade out completes
+          setCurrentLang((prev) => (prev + 1) % languages.length);
+          setTimeout(fadeIn, 100); // Small delay before fading in
+          return;
+        }
+        op -= 0.05;
+        setOpacity(op);
+      }, 30);
+    };
+
+    // Fade in new language
+    const fadeIn = () => {
+      let op = 0;
+      const timer = setInterval(() => {
+        if (op >= 1) {
+          clearInterval(timer);
+          setTimeout(() => fadeOut(), 2000); // Wait 2 seconds before fading out
+          return;
+        }
+        op += 0.05;
+        setOpacity(op);
+      }, 30);
+    };
+
+    fadeOut();
+  }, [isChanging, languages.length]);
 
   return (
     <span 
       ref={containerRef}
       className="bia-container relative inline-block"
       onMouseEnter={() => setIsVisible(true)}
-      onMouseLeave={() => setIsVisible(false)}
+      onMouseLeave={() => {
+        setIsVisible(false);
+        setIsChanging(false);
+      }}
     >
       <span className="w-0 h-0 overflow-hidden opacity-0">Bia</span>
       {isVisible && (
-        <span className="bia-animation bia-text">
+        <span 
+          className="bia-animation" 
+          style={{ opacity: opacity, transition: 'opacity 0.3s ease-in-out' }}
+        >
           {languages[currentLang].text}
         </span>
       )}

@@ -29,9 +29,21 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     const root = window.document.documentElement;
     
+    // Remove existing theme classes
     root.classList.remove('light', 'dark');
+    
+    // Add new theme class
     root.classList.add(theme);
+    
+    // Store theme in localStorage
     localStorage.setItem('theme', theme);
+    
+    // Apply additional styles to fix the dark mode brightness issue
+    if (theme === 'dark') {
+      document.body.style.backgroundColor = 'hsl(222.2 84% 4.9%)';
+    } else {
+      document.body.style.backgroundColor = '';
+    }
   }, [theme]);
 
   const toggleTheme = () => {

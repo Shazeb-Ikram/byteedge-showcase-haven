@@ -1,13 +1,17 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Monitor, Smartphone, Server, Palette, Cloud, Cog } from 'lucide-react';
+import { Monitor, Smartphone, Server, Palette, Cloud, Cog, Menu, X } from 'lucide-react';
 import Logo from './Logo';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Navbar = () => {
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const servicesRef = useRef<HTMLLIElement>(null);
   const location = useLocation();
+  const isMobile = useIsMobile();
 
   const services = [
     { 
@@ -63,6 +67,7 @@ const Navbar = () => {
 
   useEffect(() => {
     setServicesOpen(false);
+    setMobileMenuOpen(false);
   }, [location]);
 
   useEffect(() => {
@@ -86,7 +91,8 @@ const Navbar = () => {
         <div className="flex justify-between items-center py-4">
           <Logo />
           
-          <nav>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:block">
             <ul className="flex space-x-10 items-center">
               <li ref={servicesRef} className="relative">
                 <button 
@@ -134,7 +140,63 @@ const Navbar = () => {
               </li>
             </ul>
           </nav>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden p-2 rounded-md focus:outline-none"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
         </div>
+        
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <nav className="md:hidden py-4 px-2 bg-background/95 backdrop-blur-sm animate-fade-in rounded-md mb-4 border border-border">
+            <ul className="space-y-4">
+              <li>
+                <div className="px-3 py-2 text-sm font-medium text-muted-foreground">
+                  Services
+                </div>
+                <div className="mt-1 space-y-1 pl-4">
+                  {services.map((service) => (
+                    <Link
+                      key={service.id}
+                      to={`/services/${service.id}`}
+                      className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors duration-200"
+                    >
+                      <div className="flex-shrink-0">
+                        {service.icon}
+                      </div>
+                      <span>{service.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </li>
+              <li>
+                <Link 
+                  to="/about" 
+                  className="block px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors duration-200"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/contact" 
+                  className="block px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors duration-200"
+                >
+                  Contact Us
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        )}
       </div>
     </header>
   );
