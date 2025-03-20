@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
 
 @tailwind base;
@@ -74,7 +75,7 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased transition-colors duration-300;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -113,7 +114,11 @@
   }
   
   .button-primary {
-    @apply bg-byteblue text-white font-medium py-3 px-6 rounded-md transition-all duration-300 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none transform hover:scale-[1.02] active:scale-[0.98];
+    @apply relative overflow-hidden bg-gradient-to-r from-blue-600 via-byteblue to-blue-500 text-white font-medium py-3 px-6 rounded-md shadow-md transition-all duration-300 
+    hover:shadow-lg hover:shadow-blue-500/20 focus:ring-2 focus:ring-blue-300 focus:outline-none
+    before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent 
+    before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] 
+    before:transition-transform before:duration-700 before:ease-in-out;
   }
   
   .dropdown-content {
@@ -124,4 +129,41 @@
   .romantic-text {
     font-family: 'Dancing Script', cursive;
   }
+
+  .bia-animation {
+    @apply opacity-0 absolute transition-opacity duration-300 text-byteblue romantic-text text-xl;
+  }
+
+  .bia-container:hover .bia-animation {
+    @apply opacity-100;
+  }
+}
+
+/* Additional styles for mobile improvements */
+@media (max-width: 768px) {
+  .container-custom {
+    @apply px-5;
+  }
+  
+  h1.text-4xl {
+    @apply text-3xl;
+  }
+  
+  p.text-lg {
+    @apply text-base;
+  }
+
+  .grid.grid-cols-1 {
+    @apply gap-6;
+  }
+}
+
+/* Animation for "Bia" */
+@keyframes handwriteText {
+  0%, 100% { opacity: 0; transform: scale(0.95); }
+  10%, 90% { opacity: 1; transform: scale(1); }
+}
+
+.bia-text {
+  animation: handwriteText 4s infinite;
 }

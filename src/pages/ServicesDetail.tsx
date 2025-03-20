@@ -5,7 +5,7 @@ import { Monitor, Smartphone, Server, Palette, Cloud, Cog, ArrowLeft } from 'luc
 import { Button } from '@/components/ui/button';
 import Footer from '@/components/Footer';
 
-// Service details database
+// Service details database with updated image paths
 const servicesData = {
   'web-development': {
     title: 'Web Development',
@@ -22,7 +22,7 @@ const servicesData = {
       'Performance optimization'
     ],
     technologies: ['React', 'Angular', 'Vue.js', 'Node.js', 'PHP', 'WordPress', 'Shopify'],
-    imagePath: '/lovable-uploads/092eb925-fa02-411c-9c5c-cf24d0545c35.png'
+    imagePath: '/lovable-uploads/ae87ccea-5ee3-4a7a-a567-75df1d54bcb3.png'
   },
   'mobile-app-development': {
     title: 'Mobile App Development',
@@ -39,7 +39,7 @@ const servicesData = {
       'Integration with backend systems'
     ],
     technologies: ['Swift', 'Kotlin', 'React Native', 'Flutter', 'Firebase'],
-    imagePath: '/lovable-uploads/a15737a6-5f54-44a4-a0f0-e4e96aecc9d6.png'
+    imagePath: '/lovable-uploads/25065304-74c0-4d5f-a737-3e9c11c12e9e.png'
   },
   'backend-development': {
     title: 'Backend Development',
@@ -56,7 +56,7 @@ const servicesData = {
       'Payment gateway integration'
     ],
     technologies: ['Node.js', 'Python', 'Java', 'MongoDB', 'PostgreSQL', 'Redis', 'GraphQL'],
-    imagePath: '/lovable-uploads/f21aeb3b-a984-4992-a0fb-a968497a2af7.png'
+    imagePath: '/lovable-uploads/4bc1e7df-bce7-4aac-8229-83d2d16011a9.png'
   },
   'ui-ux-design': {
     title: 'UI/UX Design',
@@ -73,7 +73,7 @@ const servicesData = {
       'Responsive design'
     ],
     technologies: ['Figma', 'Adobe XD', 'Sketch', 'InVision', 'Zeplin'],
-    imagePath: '/lovable-uploads/5f72a324-fddd-43f5-b7f0-3093872bc071.png'
+    imagePath: '/lovable-uploads/7128c9dd-d86a-4930-91c1-71b87b92ba83.png'
   },
   'cloud-solutions': {
     title: 'Cloud Solutions',
@@ -90,7 +90,7 @@ const servicesData = {
       'Cost management'
     ],
     technologies: ['AWS', 'Google Cloud', 'Microsoft Azure', 'Kubernetes', 'Docker', 'Terraform'],
-    imagePath: '/lovable-uploads/b752322a-5985-4566-93cb-e064c7e703d2.png'
+    imagePath: '/lovable-uploads/4bc1e7df-bce7-4aac-8229-83d2d16011a9.png'
   },
   'devops': {
     title: 'DevOps',
@@ -107,7 +107,7 @@ const servicesData = {
       'Performance testing'
     ],
     technologies: ['Jenkins', 'GitLab CI', 'Docker', 'Kubernetes', 'Ansible', 'Terraform', 'Prometheus'],
-    imagePath: '/lovable-uploads/95630b2f-2b1f-47a5-9aa8-bef97b3d007e.png'
+    imagePath: '/lovable-uploads/ae87ccea-5ee3-4a7a-a567-75df1d54bcb3.png'
   }
 };
 

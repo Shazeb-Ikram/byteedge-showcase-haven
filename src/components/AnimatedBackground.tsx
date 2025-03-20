@@ -22,120 +22,158 @@ const AnimatedBackground: React.FC = () => {
     window.addEventListener('resize', handleResize);
     handleResize();
 
-    // Particle system configuration
-    const particleCount = 50; // Number of particles
-    const connectionDistance = 200; // Maximum distance to draw connections
-    const particles: {
-      x: number;
-      y: number;
-      radius: number;
-      speedX: number;
-      speedY: number;
-      hue: number;
-      hueSpeed: number;
-      opacity: number;
-    }[] = [];
+    // Star configuration
+    const stars = [
+      { name: 'Bellatrix', x: canvas.width * 0.3, y: canvas.height * 0.3, radius: 2.5, maxRadius: 3.5, 
+        pulseSpeed: 0.02, pulseDirection: 1, pulseFactor: 0, hue: 210 },
+      { name: 'Izar', x: canvas.width * 0.7, y: canvas.height * 0.4, radius: 2.2, maxRadius: 3.2, 
+        pulseSpeed: 0.015, pulseDirection: 1, pulseFactor: 0.5, hue: 200 },
+      { name: 'Atria', x: canvas.width * 0.5, y: canvas.height * 0.7, radius: 2.8, maxRadius: 3.8, 
+        pulseSpeed: 0.025, pulseDirection: 1, pulseFactor: 0.8, hue: 220 }
+    ];
     
-    // Create particles
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
+    // Dust particles
+    const dustParticles = [];
+    const dustCount = 80; // Reduced number for less intensity
+    
+    for (let i = 0; i < dustCount; i++) {
+      dustParticles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1,
-        speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5,
-        hue: Math.random() * 60 - 30, // Slight color variation
-        hueSpeed: (Math.random() - 0.5) * 0.1, // Color changing speed
-        opacity: 0.1 + Math.random() * 0.3
+        radius: Math.random() * 1 + 0.1, // Smaller particles
+        speedX: (Math.random() - 0.5) * 0.2, // Slower movement
+        speedY: (Math.random() - 0.5) * 0.2,
+        opacity: 0.05 + Math.random() * 0.15 // Lower opacity
       });
     }
     
+    // Draw connection between stars (constellation lines)
+    const drawConstellationLines = () => {
+      // Draw lines between stars with a very subtle opacity
+      ctx.beginPath();
+      ctx.moveTo(stars[0].x, stars[0].y);
+      ctx.lineTo(stars[1].x, stars[1].y);
+      ctx.lineTo(stars[2].x, stars[2].y);
+      
+      // Set line style based on theme
+      const baseColor = theme === 'dark' ? '180, 200, 255' : '30, 60, 140';
+      const lineOpacity = theme === 'dark' ? 0.04 : 0.03; // Very subtle
+      
+      ctx.strokeStyle = `rgba(${baseColor}, ${lineOpacity})`;
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    };
+    
+    let frameCount = 0;
+    
     const animate = () => {
-      // Clear canvas with slight persistence for trailing effect
+      frameCount++;
+      
+      // Clear canvas with very high persistence for minimal trailing
       ctx.fillStyle = theme === 'dark' 
-        ? 'rgba(10, 10, 20, 0.05)' 
-        : 'rgba(255, 255, 255, 0.05)';
+        ? 'rgba(10, 10, 20, 0.1)' 
+        : 'rgba(255, 255, 255, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Draw and update particles
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
+      // Update and draw stars with gentle pulsing
+      stars.forEach(star => {
+        // Update pulsing effect (very subtle)
+        star.pulseFactor += star.pulseSpeed * star.pulseDirection;
+        if (star.pulseFactor >= 1) {
+          star.pulseDirection = -1;
+        } else if (star.pulseFactor <= 0) {
+          star.pulseDirection = 1;
+        }
         
-        // Update position
-        p.x += p.speedX;
-        p.y += p.speedY;
+        // Calculate current radius with pulsing
+        const currentRadius = star.radius + (star.maxRadius - star.radius) * star.pulseFactor;
         
-        // Update hue
-        p.hue += p.hueSpeed;
+        // Draw star center
+        const gradient = ctx.createRadialGradient(
+          star.x, star.y, 0,
+          star.x, star.y, currentRadius * 5
+        );
         
-        // Boundary checks with wrapping
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
+        // Set colors based on theme
+        const baseColor = theme === 'dark' ? '180, 210, 255' : '30, 90, 180';
+        
+        gradient.addColorStop(0, `rgba(${baseColor}, ${0.6 + star.pulseFactor * 0.3})`);
+        gradient.addColorStop(0.4, `rgba(${baseColor}, ${0.2 + star.pulseFactor * 0.1})`);
+        gradient.addColorStop(1, `rgba(${baseColor}, 0)`);
+        
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, currentRadius * 5, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        
+        // Draw star core
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, currentRadius, 0, Math.PI * 2);
+        ctx.fillStyle = theme === 'dark' 
+          ? `rgba(220, 235, 255, ${0.7 + star.pulseFactor * 0.3})` 
+          : `rgba(50, 120, 220, ${0.6 + star.pulseFactor * 0.3})`;
+        ctx.fill();
+      });
+      
+      // Draw constellation lines every frame (very subtle)
+      if (frameCount % 3 === 0) { // Reduce frequency of redrawing lines
+        drawConstellationLines();
+      }
+      
+      // Update and draw dust particles
+      dustParticles.forEach(particle => {
+        // Update position (very slow movement)
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        
+        // Boundary check with wrapping
+        if (particle.x < 0) particle.x = canvas.width;
+        if (particle.x > canvas.width) particle.x = 0;
+        if (particle.y < 0) particle.y = canvas.height;
+        if (particle.y > canvas.height) particle.y = 0;
         
         // Draw particle
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
         
         // Set particle color based on theme
-        const baseColor = theme === 'dark' ? '200, 220, 255' : '30, 60, 110';
-        ctx.fillStyle = `rgba(${baseColor}, ${p.opacity})`;
+        const baseColor = theme === 'dark' ? '180, 210, 255' : '30, 90, 180';
+        ctx.fillStyle = `rgba(${baseColor}, ${particle.opacity})`;
         ctx.fill();
-        
-        // Create connections between nearby particles
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dx = p.x - p2.x;
-          const dy = p.y - p2.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance < connectionDistance) {
-            // Calculate opacity based on distance (closer = more opaque)
-            const opacity = (1 - distance / connectionDistance) * 0.4 * (p.opacity + p2.opacity) / 2;
-            
-            // Draw line connecting particles
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            
-            // Set line color based on theme
-            ctx.strokeStyle = theme === 'dark' 
-              ? `rgba(180, 210, 255, ${opacity})` 
-              : `rgba(50, 90, 160, ${opacity})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
+      });
       
-      // Create occasional radial pulses for visual interest (constellation "activations")
-      if (Math.random() < 0.01) { // 1% chance per frame
-        const pulse = {
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: 0,
-          maxRadius: 100 + Math.random() * 150,
-          growth: 3 + Math.random() * 2
-        };
+      // Occasional subtle shimmer effect on constellation lines (very rare)
+      if (Math.random() < 0.003) { // 0.3% chance per frame
+        const shimmerStart = Math.floor(Math.random() * stars.length);
+        const shimmerEnd = (shimmerStart + 1) % stars.length;
         
-        const expandPulse = () => {
+        const shimmerLength = 200;
+        const shimmerSteps = 20;
+        
+        // Shimmer animation
+        let step = 0;
+        const shimmerInterval = setInterval(() => {
+          if (step >= shimmerSteps || !ctx) {
+            clearInterval(shimmerInterval);
+            return;
+          }
+          
+          // Calculate shimmer opacity
+          const progress = step / shimmerSteps;
+          const shimmerOpacity = Math.sin(progress * Math.PI) * 0.15; // Max 15% opacity
+          
+          // Draw shimmering line segment
           ctx.beginPath();
-          ctx.arc(pulse.x, pulse.y, pulse.radius, 0, Math.PI * 2);
-          ctx.strokeStyle = theme === 'dark' 
-            ? `rgba(180, 210, 255, ${0.4 - pulse.radius / pulse.maxRadius * 0.4})` 
-            : `rgba(50, 90, 160, ${0.3 - pulse.radius / pulse.maxRadius * 0.3})`;
-          ctx.lineWidth = 0.5;
+          ctx.moveTo(stars[shimmerStart].x, stars[shimmerStart].y);
+          ctx.lineTo(stars[shimmerEnd].x, stars[shimmerEnd].y);
+          
+          const baseColor = theme === 'dark' ? '180, 210, 255' : '30, 90, 180';
+          ctx.strokeStyle = `rgba(${baseColor}, ${shimmerOpacity})`;
+          ctx.lineWidth = 1;
           ctx.stroke();
           
-          pulse.radius += pulse.growth;
-          
-          if (pulse.radius < pulse.maxRadius) {
-            requestAnimationFrame(expandPulse);
-          }
-        };
-        
-        expandPulse();
+          step++;
+        }, 50);
       }
       
       requestAnimationFrame(animate);

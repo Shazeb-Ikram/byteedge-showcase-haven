@@ -1,6 +1,51 @@
+
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import Logo from './Logo';
+
+const BiaAnimation = () => {
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentLang, setCurrentLang] = useState(0);
+
+  // Languages to display "Bia" in
+  const languages = [
+    { text: "Bia", lang: "English" },
+    { text: "비아", lang: "Korean" },
+    { text: "бия", lang: "Russian" },
+    { text: "ビア", lang: "Japanese" },
+    { text: "比亚", lang: "Chinese" },
+    { text: "बिया", lang: "Hindi" },
+    { text: "بیا", lang: "Persian" }
+  ];
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const interval = setInterval(() => {
+      setCurrentLang((prev) => (prev + 1) % languages.length);
+    }, 1000); // Change language every second
+
+    return () => clearInterval(interval);
+  }, [isVisible, languages.length]);
+
+  return (
+    <span 
+      ref={containerRef}
+      className="bia-container relative inline-block"
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
+    >
+      <span className="w-0 h-0 overflow-hidden opacity-0">Bia</span>
+      {isVisible && (
+        <span className="bia-animation bia-text">
+          {languages[currentLang].text}
+        </span>
+      )}
+    </span>
+  );
+};
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -56,7 +101,7 @@ const Footer = () => {
           <p className="text-muted-foreground text-sm">
             © {currentYear} ByteEdge. All rights reserved.
           </p>
-          <span className="romantic-text text-byteblue text-xl">Munchkin</span>
+          <BiaAnimation />
         </div>
       </div>
     </footer>
