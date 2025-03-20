@@ -1,7 +1,6 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 
 const AnimatedBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -31,7 +30,7 @@ const AnimatedBackground: React.FC = () => {
         y: canvas.height * 0.3, 
         radius: 2.5, 
         maxRadius: 3.5, 
-        pulseSpeed: 0.008, // Slower pulse
+        pulseSpeed: 0.004, // Slower pulse
         pulseDirection: 1, 
         pulseFactor: 0, 
         hue: 280, // Purplish-lava hue
@@ -44,7 +43,7 @@ const AnimatedBackground: React.FC = () => {
         y: canvas.height * 0.4, 
         radius: 2.2, 
         maxRadius: 3.2, 
-        pulseSpeed: 0.006, // Slower pulse
+        pulseSpeed: 0.003, // Slower pulse
         pulseDirection: 1, 
         pulseFactor: 0.5, 
         hue: 290, // Purplish-lava hue
@@ -57,7 +56,7 @@ const AnimatedBackground: React.FC = () => {
         y: canvas.height * 0.7, 
         radius: 2.8, 
         maxRadius: 3.8, 
-        pulseSpeed: 0.007, // Slower pulse
+        pulseSpeed: 0.0035, // Slower pulse
         pulseDirection: 1, 
         pulseFactor: 0.8, 
         hue: 270, // Purplish-lava hue
@@ -68,7 +67,7 @@ const AnimatedBackground: React.FC = () => {
     
     // Enhanced background lines (cosmic streams)
     const cosmicStreams = [];
-    const streamCount = 15; // Fewer, more deliberate streams
+    const streamCount = 10; // Fewer, more deliberate streams
     
     for (let i = 0; i < streamCount; i++) {
       const startX = Math.random() * canvas.width;
@@ -89,27 +88,27 @@ const AnimatedBackground: React.FC = () => {
         startX,
         startY,
         controlPoints,
-        width: Math.random() * 1.5 + 0.8, // Thicker lines
+        width: Math.random() * 1.2 + 0.6, // Thinner lines
         length: Math.random() * 200 + 100,
         progress: 0,
-        speed: Math.random() * 0.002 + 0.0005, // Slower moving
-        opacity: Math.random() * 0.15 + 0.05, // Lower base opacity
+        speed: Math.random() * 0.001 + 0.0003, // Slower moving
+        opacity: Math.random() * 0.12 + 0.03, // Lower base opacity
         hue: Math.random() * 60 + 240 // Blue to purple range
       });
     }
     
     // Dust particles for atmosphere
     const dustParticles = [];
-    const dustCount = 50; // Reduced for cleaner look
+    const dustCount = 40; // Reduced for cleaner look
     
     for (let i = 0; i < dustCount; i++) {
       dustParticles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 0.8 + 0.1, // Smaller particles
-        speedX: (Math.random() - 0.5) * 0.1, // Slower movement
-        speedY: (Math.random() - 0.5) * 0.1,
-        opacity: 0.03 + Math.random() * 0.1 // Lower opacity
+        radius: Math.random() * 0.6 + 0.1, // Smaller particles
+        speedX: (Math.random() - 0.5) * 0.08, // Slower movement
+        speedY: (Math.random() - 0.5) * 0.08,
+        opacity: 0.02 + Math.random() * 0.08 // Lower opacity
       });
     }
     
@@ -120,13 +119,12 @@ const AnimatedBackground: React.FC = () => {
       ctx.moveTo(stars[0].x, stars[0].y);
       ctx.lineTo(stars[1].x, stars[1].y);
       ctx.lineTo(stars[2].x, stars[2].y);
+      ctx.lineTo(stars[0].x, stars[0].y);
       
-      // Set line style based on theme
-      const baseColor = theme === 'dark' ? '220, 200, 255' : '90, 60, 140';
-      const lineOpacity = theme === 'dark' ? 0.06 : 0.04; // Very subtle
-      
-      ctx.strokeStyle = `rgba(${baseColor}, ${lineOpacity})`;
-      ctx.lineWidth = 0.8;
+      // Set line style
+      const lineOpacity = 0.05; // Very subtle
+      ctx.strokeStyle = `rgba(220, 200, 255, ${lineOpacity})`;
+      ctx.lineWidth = 0.6;
       ctx.stroke();
     };
     
@@ -158,10 +156,8 @@ const AnimatedBackground: React.FC = () => {
         // Using sine to start slow, go fast in the middle, and end slow
         const drawProgress = Math.sin(stream.progress * Math.PI);
         
-        // Calculate color based on theme
-        const baseColor = theme === 'dark' 
-          ? `${Math.floor(stream.hue)}, ${Math.floor(70 + stream.hue * 0.2)}, ${Math.floor(140 + stream.hue * 0.4)}` 
-          : `${Math.floor(stream.hue * 0.3)}, ${Math.floor(30 + stream.hue * 0.1)}, ${Math.floor(90 + stream.hue * 0.1)}`;
+        // Calculate color
+        const baseColor = `${Math.floor(stream.hue)}, ${Math.floor(70 + stream.hue * 0.2)}, ${Math.floor(140 + stream.hue * 0.4)}`;
         
         // Calculate opacity fade-in and fade-out
         let opacity = stream.opacity;
@@ -211,10 +207,10 @@ const AnimatedBackground: React.FC = () => {
             star.displayName = true;
           }
           // Fade in the name
-          star.nameOpacity = Math.min(star.nameOpacity + 0.1, 1);
+          star.nameOpacity = Math.min(star.nameOpacity + 0.05, 1);
         } else if (star.displayName) {
           // Fade out the name
-          star.nameOpacity -= 0.05;
+          star.nameOpacity -= 0.03;
           if (star.nameOpacity <= 0) {
             star.displayName = false;
             star.nameOpacity = 0;
@@ -231,13 +227,11 @@ const AnimatedBackground: React.FC = () => {
       frameCount++;
       
       // Clear canvas with high persistence for minimal trailing
-      ctx.fillStyle = theme === 'dark' 
-        ? 'rgba(10, 10, 20, 0.15)' 
-        : 'rgba(255, 255, 255, 0.15)';
+      ctx.fillStyle = 'rgba(10, 10, 20, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       // Draw the cosmic streams (background curved lines)
-      if (frameCount % 2 === 0) { // Reduce frequency for performance
+      if (frameCount % 3 === 0) { // Reduce frequency for performance
         drawCosmicStreams();
       }
       
@@ -260,19 +254,12 @@ const AnimatedBackground: React.FC = () => {
           star.x, star.y, currentRadius * 5
         );
         
-        // Set colors based on theme and purplish-lava hue
-        // For dark mode: more vivid purple, for light mode: more subtle
+        // Set colors for purplish-lava glow
         const glowIntensity = 0.4 + star.pulseFactor * 0.2;
         
-        if (theme === 'dark') {
-          gradient.addColorStop(0, `rgba(230, 180, 255, ${glowIntensity})`); // Purplish core
-          gradient.addColorStop(0.4, `rgba(180, 120, 220, ${glowIntensity * 0.7})`); // Mid purple
-          gradient.addColorStop(1, `rgba(120, 80, 180, 0)`); // Outer edge
-        } else {
-          gradient.addColorStop(0, `rgba(190, 130, 220, ${glowIntensity * 0.8})`); // Softer purple core
-          gradient.addColorStop(0.4, `rgba(150, 100, 180, ${glowIntensity * 0.5})`); // Mid purple
-          gradient.addColorStop(1, `rgba(100, 70, 150, 0)`); // Outer edge
-        }
+        gradient.addColorStop(0, `rgba(230, 180, 255, ${glowIntensity})`); // Purplish core
+        gradient.addColorStop(0.4, `rgba(180, 120, 220, ${glowIntensity * 0.7})`); // Mid purple
+        gradient.addColorStop(1, `rgba(120, 80, 180, 0)`); // Outer edge
         
         ctx.beginPath();
         ctx.arc(star.x, star.y, currentRadius * 5, 0, Math.PI * 2);
@@ -282,19 +269,15 @@ const AnimatedBackground: React.FC = () => {
         // Draw star core with purplish-white
         ctx.beginPath();
         ctx.arc(star.x, star.y, currentRadius, 0, Math.PI * 2);
-        ctx.fillStyle = theme === 'dark' 
-          ? `rgba(235, 220, 255, ${0.7 + star.pulseFactor * 0.3})` // Bright purplish white
-          : `rgba(180, 160, 220, ${0.6 + star.pulseFactor * 0.3})`; // Softer purple white
+        ctx.fillStyle = `rgba(235, 220, 255, ${0.7 + star.pulseFactor * 0.3})`; // Bright purplish white
         ctx.fill();
         
         // Draw star name if hovering
         if (star.displayName && star.nameOpacity > 0) {
-          ctx.font = '12px Arial';
+          ctx.font = '14px Arial';
           ctx.textAlign = 'center';
-          ctx.fillStyle = theme === 'dark' 
-            ? `rgba(255, 255, 255, ${star.nameOpacity})` 
-            : `rgba(80, 40, 120, ${star.nameOpacity})`;
-          ctx.fillText(star.name, star.x, star.y - 20);
+          ctx.fillStyle = `rgba(255, 255, 255, ${star.nameOpacity})`;
+          ctx.fillText(star.name, star.x, star.y + 20); // Position below the star
         }
       });
       
@@ -320,19 +303,18 @@ const AnimatedBackground: React.FC = () => {
           ctx.beginPath();
           ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
           
-          // Set particle color based on theme
-          const baseColor = theme === 'dark' ? '180, 160, 220' : '100, 80, 150';
-          ctx.fillStyle = `rgba(${baseColor}, ${particle.opacity})`;
+          // Set particle color
+          ctx.fillStyle = `rgba(180, 160, 220, ${particle.opacity})`;
           ctx.fill();
         });
       }
       
       // Occasional subtle shimmer effect on constellation lines (very rare)
-      if (Math.random() < 0.001) { // 0.1% chance per frame
+      if (Math.random() < 0.0005) { // 0.05% chance per frame
         const shimmerStart = Math.floor(Math.random() * stars.length);
         const shimmerEnd = (shimmerStart + 1) % stars.length;
         
-        const shimmerSteps = 30; // Slower shimmer
+        const shimmerSteps = 40; // Slower shimmer
         
         // Shimmer animation
         let step = 0;
@@ -344,20 +326,19 @@ const AnimatedBackground: React.FC = () => {
           
           // Calculate shimmer opacity
           const progress = step / shimmerSteps;
-          const shimmerOpacity = Math.sin(progress * Math.PI) * 0.2; // Max 20% opacity
+          const shimmerOpacity = Math.sin(progress * Math.PI) * 0.15; // Max 15% opacity
           
           // Draw shimmering line segment
           ctx.beginPath();
           ctx.moveTo(stars[shimmerStart].x, stars[shimmerStart].y);
           ctx.lineTo(stars[shimmerEnd].x, stars[shimmerEnd].y);
           
-          const baseColor = theme === 'dark' ? '220, 190, 255' : '130, 90, 180';
-          ctx.strokeStyle = `rgba(${baseColor}, ${shimmerOpacity})`;
+          ctx.strokeStyle = `rgba(220, 190, 255, ${shimmerOpacity})`;
           ctx.lineWidth = 1;
           ctx.stroke();
           
           step++;
-        }, 60); // Slower animation (60ms per step)
+        }, 80); // Slower animation (80ms per step)
       }
       
       requestAnimationFrame(animate);

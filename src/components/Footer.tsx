@@ -35,12 +35,12 @@ const BiaAnimation = () => {
       const timer = setInterval(() => {
         if (op >= 1) {
           clearInterval(timer);
-          setTimeout(() => setIsChanging(true), 2000); // Wait 2 seconds before changing
+          setTimeout(() => setIsChanging(true), 3000); // Wait 3 seconds before changing
           return;
         }
         op += 0.05;
         setOpacity(op);
-      }, 30);
+      }, 50); // Slower fade-in
     };
 
     fadeIn();
@@ -58,12 +58,12 @@ const BiaAnimation = () => {
           clearInterval(timer);
           // Change language after fade out completes
           setCurrentLang((prev) => (prev + 1) % languages.length);
-          setTimeout(fadeIn, 100); // Small delay before fading in
+          setTimeout(fadeIn, 300); // Small delay before fading in
           return;
         }
         op -= 0.05;
         setOpacity(op);
-      }, 30);
+      }, 50); // Slower fade-out
     };
 
     // Fade in new language
@@ -72,21 +72,21 @@ const BiaAnimation = () => {
       const timer = setInterval(() => {
         if (op >= 1) {
           clearInterval(timer);
-          setTimeout(() => fadeOut(), 2000); // Wait 2 seconds before fading out
+          setTimeout(() => fadeOut(), 3000); // Wait 3 seconds before fading out
           return;
         }
         op += 0.05;
         setOpacity(op);
-      }, 30);
+      }, 50); // Slower fade-in
     };
 
     fadeOut();
-  }, [isChanging, languages.length]);
+  }, [isChanging, languages.length, opacity]);
 
   return (
     <span 
       ref={containerRef}
-      className="bia-container relative inline-block"
+      className="relative inline-block ml-1"
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => {
         setIsVisible(false);
@@ -96,8 +96,12 @@ const BiaAnimation = () => {
       <span className="w-0 h-0 overflow-hidden opacity-0">Bia</span>
       {isVisible && (
         <span 
-          className="bia-animation" 
-          style={{ opacity: opacity, transition: 'opacity 0.3s ease-in-out' }}
+          className="absolute text-byteblue romantic-text"
+          style={{ 
+            opacity: opacity, 
+            transition: 'opacity 0.5s ease-in-out',
+            transform: 'translateY(-2px)'
+          }}
         >
           {languages[currentLang].text}
         </span>
@@ -156,11 +160,10 @@ const Footer = () => {
         </div>
         
         {/* Copyright */}
-        <div className="border-t border-border pt-8 text-center flex flex-col md:flex-row justify-center items-center gap-2">
-          <p className="text-muted-foreground text-sm">
-            © {currentYear} ByteEdge. All rights reserved.
+        <div className="border-t border-border pt-8 text-center">
+          <p className="text-muted-foreground text-sm inline-flex items-center justify-center">
+            © {currentYear} ByteEdge. All rights reserved.<BiaAnimation />
           </p>
-          <BiaAnimation />
         </div>
       </div>
     </footer>

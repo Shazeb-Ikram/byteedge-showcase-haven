@@ -1,30 +1,14 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-
-type Theme = 'light' | 'dark';
+import React, { createContext, useContext, useEffect } from 'react';
 
 type ThemeContextType = {
-  theme: Theme;
-  toggleTheme: () => void;
+  theme: 'dark';
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Check local storage first
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || savedTheme === 'light') {
-      return savedTheme;
-    }
-    
-    // Then check system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    
-    return 'light';
-  });
+  const theme = 'dark';
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -32,26 +16,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Remove existing theme classes
     root.classList.remove('light', 'dark');
     
-    // Add new theme class
+    // Add dark theme class
     root.classList.add(theme);
     
-    // Store theme in localStorage
-    localStorage.setItem('theme', theme);
-    
-    // Apply additional styles to fix the dark mode brightness issue
-    if (theme === 'dark') {
-      document.body.style.backgroundColor = 'hsl(222.2 84% 4.9%)';
-    } else {
-      document.body.style.backgroundColor = '';
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
+    // Apply dark mode background
+    document.body.style.backgroundColor = 'hsl(222.2 84% 4.9%)';
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme }}>
       {children}
     </ThemeContext.Provider>
   );
