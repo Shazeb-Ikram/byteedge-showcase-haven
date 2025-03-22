@@ -1,5 +1,5 @@
 
-import { Mail } from 'lucide-react';
+import { Mail, Instagram, Facebook } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 import Footer from '@/components/Footer';
 
@@ -20,14 +20,21 @@ const ContactUs = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Direct Email</h3>
-                  <p className="text-muted-foreground">info@byteedge.services</p>
+                  <p className="text-muted-foreground">
+                    <a href="mailto:info@byteedge.services" className="hover:text-byteblue transition-colors">
+                      info@byteedge.services
+                    </a>
+                  </p>
                 </div>
               </div>
               
               <div className="bg-card p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold mb-4">Get in Touch</h3>
                 <p className="text-muted-foreground mb-4">
-                  Fill out the form or email us directly at info@byteedge.services
+                  Fill out the form or email us directly at{' '}
+                  <a href="mailto:info@byteedge.services" className="text-byteblue hover:underline">
+                    info@byteedge.services
+                  </a>
                 </p>
                 <p className="text-muted-foreground">
                   We'll get back to you within 24 hours!
@@ -35,17 +42,11 @@ const ContactUs = () => {
               </div>
               
               <div className="flex space-x-4">
-                <a href="#" className="bg-byteblue text-white p-3 rounded-full transition-transform hover:scale-110">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-instagram">
-                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                  </svg>
+                <a href="#" className="bg-byteblue text-white p-3 rounded-full transition-transform hover:scale-110" aria-label="Instagram">
+                  <Instagram size={24} />
                 </a>
-                <a href="#" className="bg-byteblue text-white p-3 rounded-full transition-transform hover:scale-110">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-facebook">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                  </svg>
+                <a href="#" className="bg-byteblue text-white p-3 rounded-full transition-transform hover:scale-110" aria-label="Facebook">
+                  <Facebook size={24} />
                 </a>
               </div>
             </div>
