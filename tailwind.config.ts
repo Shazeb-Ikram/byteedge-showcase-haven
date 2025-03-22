@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -60,6 +59,9 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			height: {
+				'120': '30rem',
+			},
 			keyframes: {
 				"accordion-down": {
 					from: { height: "0" },
@@ -92,6 +94,21 @@ export default {
 				"rotate-slow": {
 					"0%": { transform: "rotate(0deg)" },
 					"100%": { transform: "rotate(360deg)" }
+				},
+				"pulse-slow": {
+					"0%": { transform: "scale(1)", opacity: "1" },
+					"50%": { transform: "scale(1.05)", opacity: "0.8" },
+					"100%": { transform: "scale(1)", opacity: "1" }
+				},
+				"bounce-horizontal": {
+					"0%, 100%": { 
+						transform: "translateX(0)", 
+						animationTimingFunction: "cubic-bezier(0.8, 0, 1, 1)"
+					},
+					"50%": { 
+						transform: "translateX(10px)", 
+						animationTimingFunction: "cubic-bezier(0, 0, 0.2, 1)"
+					}
 				}
 			},
 			animation: {
@@ -102,7 +119,9 @@ export default {
 				"scale-in": "scale-in 0.3s ease-out",
 				"slide-down": "slide-down 0.3s ease-out",
 				"slide-up": "slide-up 0.3s ease-out",
-				"rotate-slow": "rotate-slow 10s linear infinite"
+				"rotate-slow": "rotate-slow 10s linear infinite",
+				"pulse-slow": "pulse-slow 3s ease-in-out infinite",
+				"bounce-horizontal": "bounce-horizontal 1.5s infinite"
 			}
 		}
 	},

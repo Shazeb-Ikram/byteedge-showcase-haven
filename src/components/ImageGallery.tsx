@@ -10,7 +10,20 @@ import {
   Smartphone,
   Server,
   Palette,
-  Cloud
+  Cloud,
+  FileCheck,
+  Layers,
+  Edit,
+  Zap,
+  Gauge,
+  Package,
+  Rocket,
+  CheckCircle2,
+  Workflow,
+  Puzzle,
+  Users,
+  Database,
+  ArrowRight
 } from 'lucide-react';
 
 type GalleryType = 'placeholder';
@@ -22,61 +35,103 @@ interface ImageGalleryProps {
 }
 
 const ImageGallery: React.FC<ImageGalleryProps> = ({ type, alt, service }) => {
-  // Define service-specific colors and icons
-  const serviceConfig = {
+  // Define the delivery process flowchart for each service
+  const serviceFlowcharts = {
     'web-development': {
-      icons: [<Monitor key="1" />, <Code key="2" />, <Terminal key="3" />, <Settings key="4" />],
-      mainIcon: <Monitor />,
-      text: "Modern, responsive web applications with cutting-edge frameworks and technologies"
+      stages: [
+        { icon: <Puzzle className="flowchart-icon" />, name: "Discovery", description: "Requirements gathering and project planning" },
+        { icon: <Edit className="flowchart-icon" />, name: "Design", description: "UI/UX wireframing and prototyping" },
+        { icon: <Code className="flowchart-icon" />, name: "Development", description: "Frontend and backend implementation" },
+        { icon: <Gauge className="flowchart-icon" />, name: "Testing", description: "QA and performance optimization" },
+        { icon: <Rocket className="flowchart-icon" />, name: "Deployment", description: "Launch and client training" }
+      ],
+      color: "from-blue-500/20 to-indigo-500/20"
     },
     'mobile-app-development': {
-      icons: [<Smartphone key="1" />, <Code key="2" />, <Settings key="3" />, <Terminal key="4" />],
-      mainIcon: <Smartphone />,
-      text: "Native and cross-platform mobile applications for iOS and Android platforms"
+      stages: [
+        { icon: <Users className="flowchart-icon" />, name: "User Research", description: "Identifying target audience needs" },
+        { icon: <Layers className="flowchart-icon" />, name: "Prototyping", description: "Interactive mockups and user flows" },
+        { icon: <Smartphone className="flowchart-icon" />, name: "Development", description: "Native or cross-platform coding" },
+        { icon: <Zap className="flowchart-icon" />, name: "Testing", description: "Device-specific and usability testing" },
+        { icon: <Package className="flowchart-icon" />, name: "Store Release", description: "App store submission and optimization" }
+      ],
+      color: "from-purple-500/20 to-pink-500/20"
     },
     'backend-development': {
-      icons: [<Server key="1" />, <Code key="2" />, <Terminal key="3" />, <Settings key="4" />],
-      mainIcon: <Server />,
-      text: "Scalable, secure backend systems and APIs that power your applications"
+      stages: [
+        { icon: <Workflow className="flowchart-icon" />, name: "Architecture", description: "System design and data modeling" },
+        { icon: <Database className="flowchart-icon" />, name: "Database Design", description: "Schema development and optimization" },
+        { icon: <Server className="flowchart-icon" />, name: "API Development", description: "Endpoints and service integration" },
+        { icon: <Terminal className="flowchart-icon" />, name: "Testing", description: "Load testing and security audits" },
+        { icon: <CheckCircle2 className="flowchart-icon" />, name: "Documentation", description: "API docs and developer resources" }
+      ],
+      color: "from-emerald-500/20 to-teal-500/20"
     },
     'ui-ux-design': {
-      icons: [<Palette key="1" />, <Code key="2" />, <Terminal key="3" />, <Settings key="4" />],
-      mainIcon: <Palette />,
-      text: "Beautiful, intuitive interfaces that enhance user engagement and satisfaction"
+      stages: [
+        { icon: <Users className="flowchart-icon" />, name: "User Research", description: "Personas and journey mapping" },
+        { icon: <Puzzle className="flowchart-icon" />, name: "Information Architecture", description: "Site mapping and content hierarchy" },
+        { icon: <Edit className="flowchart-icon" />, name: "Wireframing", description: "Low-fidelity layouts and interactions" },
+        { icon: <Palette className="flowchart-icon" />, name: "Visual Design", description: "High-fidelity mockups and UI elements" },
+        { icon: <FileCheck className="flowchart-icon" />, name: "Usability Testing", description: "User feedback and iterations" }
+      ],
+      color: "from-amber-500/20 to-orange-500/20"
     },
     'cloud-solutions': {
-      icons: [<Cloud key="1" />, <Server key="2" />, <Terminal key="3" />, <Settings key="4" />],
-      mainIcon: <Cloud />,
-      text: "Secure, scalable cloud infrastructures and migration strategies"
+      stages: [
+        { icon: <Puzzle className="flowchart-icon" />, name: "Assessment", description: "Infrastructure evaluation and planning" },
+        { icon: <Cloud className="flowchart-icon" />, name: "Architecture", description: "Cloud-native design and security" },
+        { icon: <ServerCog className="flowchart-icon" />, name: "Migration", description: "Data and application transition" },
+        { icon: <Settings className="flowchart-icon" />, name: "Optimization", description: "Performance tuning and cost management" },
+        { icon: <Gauge className="flowchart-icon" />, name: "Monitoring", description: "Ongoing maintenance and support" }
+      ],
+      color: "from-sky-500/20 to-cyan-500/20"
     },
     'devops': {
-      icons: [<ServerCog key="1" />, <GitBranch key="2" />, <Terminal key="3" />, <Code key="4" />],
-      mainIcon: <Settings />,
-      text: "Automated workflows and continuous integration/delivery pipelines for efficient software development"
+      stages: [
+        { icon: <GitBranch className="flowchart-icon" />, name: "Version Control", description: "Code repository and branching strategy" },
+        { icon: <Workflow className="flowchart-icon" />, name: "CI/CD Pipeline", description: "Automated build and deployment" },
+        { icon: <ServerCog className="flowchart-icon" />, name: "Infrastructure", description: "Infrastructure as code and automation" },
+        { icon: <Gauge className="flowchart-icon" />, name: "Monitoring", description: "Logging, metrics, and alerting" },
+        { icon: <Zap className="flowchart-icon" />, name: "Optimization", description: "Performance tuning and scaling" }
+      ],
+      color: "from-rose-500/20 to-red-500/20"
     }
   };
 
   // Get config for current service
-  const currentConfig = serviceConfig[service];
+  const currentFlowchart = serviceFlowcharts[service];
 
   return (
-    <div className="relative h-80 md:h-96 w-full">
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary to-background rounded-lg overflow-hidden shadow-lg flex flex-col items-center justify-center p-8">
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {currentConfig.icons.map((icon, index) => (
-            <div key={index} className="w-12 h-12 text-byteblue">
-              {icon}
-            </div>
-          ))}
-        </div>
-        {currentConfig.mainIcon && (
-          <div className="w-20 h-20 text-byteblue animate-spin-slow">
-            {currentConfig.mainIcon}
+    <div className="relative h-96 md:h-120 w-full">
+      <div className={`absolute inset-0 bg-gradient-to-br ${currentFlowchart.color} rounded-lg overflow-hidden shadow-lg p-6`}>
+        <div className="w-full h-full flex flex-col items-center justify-center">
+          <h3 className="text-xl font-semibold mb-6 text-foreground">Our Delivery Process</h3>
+          
+          <div className="w-full flex flex-col items-center space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-start">
+            {currentFlowchart.stages.map((stage, index) => (
+              <div 
+                key={index} 
+                className="flowchart-stage flex flex-col items-center text-center"
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center bg-card rounded-full shadow-md mb-3 text-byteblue p-4">
+                  {stage.icon}
+                </div>
+                <h4 className="font-semibold text-foreground">{stage.name}</h4>
+                <p className="text-xs md:text-sm text-muted-foreground max-w-[120px] mt-1">
+                  {stage.description}
+                </p>
+                
+                {index < currentFlowchart.stages.length - 1 && (
+                  <div className="flowchart-arrow hidden md:block absolute top-1/3 left-[calc(20%*2*index+10%)] transform -translate-x-1/2">
+                    <ArrowRight className="w-6 h-6 text-byteblue" />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-        )}
-        <p className="mt-6 text-lg text-center text-foreground">
-          {currentConfig.text}
-        </p>
+        </div>
       </div>
     </div>
   );
