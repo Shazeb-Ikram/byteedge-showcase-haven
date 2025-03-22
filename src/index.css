@@ -137,6 +137,15 @@
   .bia-container:hover .bia-animation {
     @apply block;
   }
+  
+  /* New perspective styling for 3D card effects */
+  .perspective {
+    perspective: 1000px;
+  }
+  
+  .animate-spin-slow {
+    animation: spin 5s linear infinite;
+  }
 }
 
 /* Additional styles for mobile improvements */
@@ -196,4 +205,14 @@
 
 .fade-out {
   animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+/* New animation for spinning elements */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

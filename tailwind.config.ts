@@ -88,6 +88,10 @@ export default {
 				"slide-up": {
 					"0%": { transform: "translateY(10px)", opacity: "0" },
 					"100%": { transform: "translateY(0)", opacity: "1" }
+				},
+				"rotate-slow": {
+					"0%": { transform: "rotate(0deg)" },
+					"100%": { transform: "rotate(360deg)" }
 				}
 			},
 			animation: {
@@ -97,7 +101,8 @@ export default {
 				"fade-out": "fade-out 0.3s ease-out",
 				"scale-in": "scale-in 0.3s ease-out",
 				"slide-down": "slide-down 0.3s ease-out",
-				"slide-up": "slide-up 0.3s ease-out"
+				"slide-up": "slide-up 0.3s ease-out",
+				"rotate-slow": "rotate-slow 10s linear infinite"
 			}
 		}
 	},
